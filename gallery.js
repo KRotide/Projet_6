@@ -1,6 +1,8 @@
 // Création d'un Set pour stocker les catégories uniques
 const categoriesSet = new Set();
 
+let projets = [];
+
 async function categories() {
     try {
         // Appel de l'API pour récupérer les catégories
@@ -37,11 +39,44 @@ function genererCategories(categories){
         const nomElement = document.createElement("li");
         nomElement.innerHTML = categorie.name;
 
+        // Changement d'aspect des filtres lors du clique 
+        categorieElement.addEventListener("click", function() {
+            const itemSelected = divFiltres.querySelector("ul.filter-selected");
+            if (itemSelected) {
+                itemSelected.classList.remove("filter-selected");
+            }
+            this.classList.add("filter-selected");
+
+            // Au clique de la catégorie ajoutée manuellement
+            if (categorie.id === "4") {
+                // Réinitialiser la galerie
+                const divGalerie = document.querySelector(".gallery");
+                divGalerie.innerHTML = "";
+
+                // Générer les projets non filtrés
+                genererProjets(projets);
+            } else {
+                // Filtre des projets en fonction de leur nom 
+                const categoryName = categorie.name;
+                const projetsFiltres = projets.filter(function (projet) {
+                    const projetName = projet.category.name;
+                    return categoryName === projetName;
+                });
+
+            // Réinitialiser la galerie
+            const divGalerie = document.querySelector(".gallery");
+            divGalerie.innerHTML = "";
+
+            // Générer les projets filtrés
+            genererProjets(projetsFiltres);
+            }
+        });
+
         // On rattache les balises à leur parent
         divFiltres.appendChild(categorieElement);
         categorieElement.appendChild(nomElement);
     }
-};
+}; 
 
 categories();
 
@@ -51,9 +86,11 @@ async function works() {
         const response = await fetch("http://localhost:5678/api/works");
         const worksData = await response.json();
 
-        genererProjets(worksData);
+        projets = worksData;
 
-        return worksData;
+        genererProjets(projets);
+
+        return projets;
     }catch (err){
         throw new Error("Something went wrong");
     }

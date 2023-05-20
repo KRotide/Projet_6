@@ -97,6 +97,7 @@ nav li {
 
 li:hover {
 	color: #B1663C;
+	cursor: pointer;
 }
 #introduction {
 	display: flex;
@@ -158,6 +159,10 @@ ul[data-id="2"] {
 ul[data-id="3"] {
 	padding-left: 9px;
 	padding-right: 11px;
+}
+.filters ul.filter-selected {
+	color: white;
+	background-color: #1D6154;
 }
 .gallery {
 	width: 100%;
