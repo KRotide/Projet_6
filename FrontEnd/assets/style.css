@@ -53,6 +53,41 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
+/*** fenêtre d'édition ***/
+.edit-mode {
+	width: 100vw;
+	margin-left: calc(-1 * ((100vw - 100%) / 2));
+	height: 59px;
+	background-color: black;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	border: none;
+}
+.edit-mode button {
+	font-family: 'Work Sans';
+	font-size: 16px;
+	border: none;
+	background-color: black;
+	color: white;
+	display: flex;
+	gap: 9px;
+	padding-right: 21px;
+}
+.edit-mode p {
+	width: 216px;
+	height: 38px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: white;
+	border-radius: 60px;
+	color: black;
+	font-family: 'Work Sans';
+	font-size: 14px;
+}
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -114,6 +149,30 @@ li:hover {
 	display: block;
 	margin: auto;
 	width: 80%;
+}
+
+.edit {
+	font-family: 'Work Sans';
+	font-size: 14px;
+	border: none;
+	background-color: white;
+	gap: 8px;
+	cursor: pointer;
+	display: none;
+}
+.edit-1 {
+	margin: auto;
+	width: 80%;
+	padding-top: 13px;
+}
+.title-and-edit {
+	display: flex;
+	justify-content: center;
+}
+.edit-2 {
+	margin-top: 10px;
+	margin-left: 31px;
+	padding: 0;
 }
 
 #introduction article {
