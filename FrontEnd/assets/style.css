@@ -88,13 +88,76 @@ body {
 	font-size: 14px;
 }
 
+/**** fenêtre modale ****/
+dialog {
+	border: none;
+	padding: 0;
+}
+.modal-container {
+	display: flex;
+	top: 601px
+}
+.modal {
+	width: 630px;
+	height: 731px;
+	background-color: white;
+	border-radius: 10px;
+}
+.close-modal {
+	display: flex;
+	justify-content: end;
+	font-size: 12px;
+	padding: 32px 35.99px 15.99px 0px;
+}
+h3 {
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 26px;
+	display: flex;
+	justify-content: center;
+}
+.modal-gallery {
+	padding: 46px 105px 46px 105px;
+}
+.separation {
+	background-color: #b3b3b3;
+	height: 1px;
+	width: 420px;
+	margin-left: 105px;
+}
+.add-picture {
+	display: block;
+	margin: 38px auto 23px auto;
+	background-color: #1D6154;
+	border-radius: 60px;
+	color: white;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	border: none;
+	width: 237px;
+	height: 36px;
+	cursor: pointer;
+}
+.btn-delete-gallery {
+	border: none;
+	display: block;
+	margin: 0px auto 48px auto;
+	background-color: white;
+	color: #d65353;
+	font-family: 'Syne';
+	font-weight: 400;
+	font-size: 14px;
+	cursor: pointer;
+}
+
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
 }
 section {
-	margin: 50px 0
+	margin: 50px 0;
 }
 
 h1{
@@ -103,14 +166,13 @@ h1{
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: #B1663C;
 }
 
 h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -176,7 +238,7 @@ li:hover {
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
 }
 #introduction h2 {
 	margin-bottom: 1em;
@@ -237,8 +299,8 @@ ul[data-id="3"] {
 
 .gallery img {
 	width: 100%;
-
 }
+
 #contact,
 #login {
 	width: 50%;
@@ -247,7 +309,6 @@ ul[data-id="3"] {
 #contact,
 #login > * {
 	text-align: center;
-
 }
 #contact h2,
 #login h2 {
@@ -296,7 +357,7 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
 }
 
 #login-footer {
