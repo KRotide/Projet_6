@@ -122,3 +122,69 @@ function genererProjets(projets){
 };
 
 works();
+
+// Création de la fonction de gestion 
+async function gestion() {
+    const editButtons = document.querySelectorAll(".edit");
+    const editMode = document.querySelector(".edit-mode");
+    const filters = document.querySelector(".filters");
+    const modalContainer = document.querySelector(".modal-container");
+    const modalTriggers = document.querySelectorAll(".modal-trigger");
+
+    if (localStorage.getItem("token")) {
+
+        // Disparition des filtres
+        filters.style.display = "none";
+
+        // Affichage des boutons de modifications
+        editButtons.forEach(button => {
+            button.style.display = "flex";
+        });
+
+        // Affichage de la barre d'édition
+        editMode.style.display = "flex";
+
+        // Affichage ou disparition de la fenêtre modale 
+        modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+        function toggleModal() {
+            modalContainer.classList.toggle("active");
+            if (modalContainer.classList.contains("active")) {
+                genererProjetsModale(projets);
+            }
+        }
+    }
+}
+
+function genererProjetsModale(projets){
+    // Récupération de l'élément du DOM qui accueillera les projets
+    const divGalerieModale = document.querySelector(".modal-gallery");
+    divGalerieModale.innerHTML = "";
+
+    for (let i = 0; i < projets.length; i++) {
+        const projet = projets[i];
+        
+        // Création d’une balise dédiée à un projet
+        const projetElement = document.createElement("figure");
+        projetElement.dataset.id = projet.id;
+
+        // Création des balises
+        const imageElement = document.createElement("img");
+        imageElement.src = projet.imageUrl;
+        imageElement.classList.add("modal-image");
+
+        const titleElement = document.createElement("figcaption");
+        titleElement.innerHTML = "éditer";
+        titleElement.classList.add("modal-figcaption");
+
+        // On rattache les balises à leur parent
+        divGalerieModale.appendChild(projetElement);
+        projetElement.appendChild(imageElement);
+        projetElement.appendChild(titleElement);
+    }
+};
+
+// les fonctions sont exécutées lorsque la page est entièrement chargée
+document.addEventListener("DOMContentLoaded", function () {
+    gestion();
+});
