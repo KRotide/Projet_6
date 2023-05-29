@@ -64,6 +64,8 @@ body {
 	justify-content: center;
 	align-items: center;
 	border: none;
+	position: relative;
+	z-index: 1;
 }
 .edit-mode button {
 	font-family: 'Work Sans';
@@ -89,25 +91,37 @@ body {
 }
 
 /**** fenêtre modale ****/
-dialog {
-	border: none;
-	padding: 0;
-}
 .modal-container {
-	display: flex;
-	top: 601px
+	display: none;
+	position: absolute;
+	top: 980px;
+	left: 50%;
 }
+.modal-container.active {
+	display: block;
+}
+.overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: -20%;
+	background: rgba(0, 0, 0, 0.3);
+}
+
 .modal {
+	position: absolute;
 	width: 630px;
 	height: 731px;
 	background-color: white;
 	border-radius: 10px;
+	transform: translate(-50%, -50%);
 }
-.close-modal {
-	display: flex;
-	justify-content: end;
-	font-size: 12px;
-	padding: 32px 35.99px 15.99px 0px;
+.fa-xmark {
+	position: relative;
+	top: 30px;
+	right: -583.5px;
+	cursor: pointer;
 }
 h3 {
 	font-family: 'Work Sans';
@@ -115,6 +129,7 @@ h3 {
 	font-size: 26px;
 	display: flex;
 	justify-content: center;
+	padding-top: 54px;
 }
 .modal-gallery {
 	padding: 46px 105px 46px 105px;
@@ -125,7 +140,7 @@ h3 {
 	width: 420px;
 	margin-left: 105px;
 }
-.add-picture {
+.btn-add-picture {
 	display: block;
 	margin: 38px auto 23px auto;
 	background-color: #1D6154;
@@ -328,6 +343,7 @@ ul[data-id="3"] {
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	cursor: pointer;
 }
 #contact label,
 #login label {
@@ -352,6 +368,7 @@ input[type="submit"]{
 #login p {
 	text-align: center;
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 footer nav ul {

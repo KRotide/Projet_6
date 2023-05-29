@@ -19,16 +19,17 @@
 	<button><i class="fa-regular fa-pen-to-square"></i>Mode édition</button>
 	<p>publier les changements</p>
 </div>
-<dialog class="modal-container">
+<div class="modal-container">
+	<div class="overlay modal-trigger"></div>
 	<div class="modal">
-		<div class="close-modal"><i class="fa-solid fa-xmark"></i></div>
+		<i class="fa-solid fa-xmark modal-trigger"></i>
 		<h3>Galerie photo</h3>
-			<div class="modal-gallery"></div>
+		<div class="modal-gallery"></div>
 		<div class="separation"></div>
-		<button class="add-picture">Ajouter une photo</button>
+		<button class="btn-add-picture">Ajouter une photo</button>
 		<button class="btn-delete-gallery">Supprimer la galerie</button>
 	</div>
-</dialog>
+</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
@@ -44,7 +45,7 @@
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
-			<button class="edit edit-1"><i class="fa-regular fa-pen-to-square"></i>modifier</button>
+			<button class="edit edit-1 modal-trigger"><i class="fa-regular fa-pen-to-square"></i>modifier</button>
 		</figure>
 		<article>
 			<h2>Designer d'espace</h2>
@@ -56,7 +57,7 @@
 	<section id="portfolio">
 		<div class="title-and-edit">
 			<h2>Mes Projets</h2>
-			<button class="edit edit-2"><i class="fa-regular fa-pen-to-square"></i>modifier</button>
+			<button class="edit edit-2 modal-trigger"><i class="fa-regular fa-pen-to-square"></i>modifier</button>
 		</div>
 		<div class="filters">
 			

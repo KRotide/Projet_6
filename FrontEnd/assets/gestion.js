@@ -3,6 +3,8 @@ async function gestion() {
     const editButtons = document.querySelectorAll(".edit");
     const editMode = document.querySelector(".edit-mode");
     const filters = document.querySelector(".filters");
+    const modalContainer = document.querySelector(".modal-container");
+    const modalTriggers = document.querySelectorAll(".modal-trigger");
 
     if (localStorage.getItem("token")) {
 
@@ -12,10 +14,17 @@ async function gestion() {
         // Affichage des boutons de modifications
         editButtons.forEach(button => {
             button.style.display = "flex";
-        })
+        });
 
         // Affichage de la barre d'édition
         editMode.style.display = "flex";
+
+        // Affichage ou disparition de la fenêtre modale 
+        modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+        function toggleModal() {
+            modalContainer.classList.toggle("active")
+        }
     }
 }
 
