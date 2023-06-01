@@ -3,6 +3,8 @@ const categoriesSet = new Set();
 
 let projets = [];
 
+let initialModal;
+
 async function categories() {
     try {
         // Appel de l'API pour récupérer les catégories
@@ -26,7 +28,7 @@ async function categories() {
     }
 };
 
-function genererCategories(categories){
+async function genererCategories(categories) {
     // Récupération de l'élément du DOM qui accueillera les catégories
     const divFiltres = document.querySelector(".filters");
 
@@ -76,9 +78,7 @@ function genererCategories(categories){
         divFiltres.appendChild(categorieElement);
         categorieElement.appendChild(nomElement);
     }
-}; 
-
-categories();
+}
 
 async function works() {
     try {
@@ -94,9 +94,9 @@ async function works() {
     }catch (err){
         throw new Error("Something went wrong");
     }
-};
+}
 
-function genererProjets(projets){
+async function genererProjets(projets) {
     // Récupération de l'élément du DOM qui accueillera les projets
     const divGalerie = document.querySelector(".gallery");
 
@@ -119,17 +119,18 @@ function genererProjets(projets){
         projetElement.appendChild(imageElement);
         projetElement.appendChild(titleElement);
     }
-};
-
-works();
+}
 
 // Création de la fonction de gestion 
 async function gestion() {
     const editButtons = document.querySelectorAll(".edit");
     const editMode = document.querySelector(".edit-mode");
     const filters = document.querySelector(".filters");
+    const header = document.querySelector("header");
     const modalContainer = document.querySelector(".modal-container");
-    const modalTriggers = document.querySelectorAll(".modal-trigger");
+    const modal = document.querySelector(".modal");
+    const openModal = document.querySelectorAll(".open-modal");
+    const closeModal = document.querySelector(".close-modal");
 
     if (localStorage.getItem("token")) {
 
@@ -143,21 +144,40 @@ async function gestion() {
 
         // Affichage de la barre d'édition
         editMode.style.display = "flex";
+        header.style.margin = "97px 0";
 
-        // Affichage ou disparition de la fenêtre modale 
-        modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+        // Ouverture de la fenêtre modale 
+        openModal.forEach((element) => 
+            element.addEventListener("click", () => {
+                modalContainer.style.display = "block";
+                fenêtreModale();
+            })
+        );
 
-        function toggleModal() {
-            modalContainer.classList.toggle("active");
-            if (modalContainer.classList.contains("active")) {
+        function fenêtreModale() {
+            // Fermeture de la modale au clique sur la croix
+            closeModal.addEventListener("click", () => {
+                modalContainer.style.display = "none";
+            });
+
+            // Fermeture de la modale en dehors de celle-ci
+            modalContainer.addEventListener("click", (event) => {
+                if (event.target !== modalContainer && !modal.contains(event.target)) {
+                    modalContainer.style.display = "none"
+                }
+            });   
+
+            if (modalContainer.style.display = "block") {
+                // Stockage de l'état initial de la modale 
+                initialModal = modal.innerHTML;
                 genererProjetsModale(projets);
             }
         }
     }
 }
 
-function genererProjetsModale(projets){
-    // Récupération de l'élément du DOM qui accueillera les projets
+async function genererProjetsModale(projets) {
+    // Récupération de l'élément du DOM qui accueillera les projets de la modale
     const divGalerieModale = document.querySelector(".modal-gallery");
     divGalerieModale.innerHTML = "";
 
@@ -173,6 +193,12 @@ function genererProjetsModale(projets){
         imageElement.src = projet.imageUrl;
         imageElement.classList.add("modal-image");
 
+        const iconeElement = document.createElement("i");
+        iconeElement.classList.add("fa-regular", "fa-trash-can");
+
+        const hoverIconeElement = document.createElement("i");
+        hoverIconeElement.classList.add("fa-solid", "fa-arrows-up-down-left-right");
+
         const titleElement = document.createElement("figcaption");
         titleElement.innerHTML = "éditer";
         titleElement.classList.add("modal-figcaption");
@@ -180,11 +206,145 @@ function genererProjetsModale(projets){
         // On rattache les balises à leur parent
         divGalerieModale.appendChild(projetElement);
         projetElement.appendChild(imageElement);
+        projetElement.appendChild(iconeElement);
+        projetElement.appendChild(hoverIconeElement);
         projetElement.appendChild(titleElement);
     }
-};
+}
+
+async function restoreInitialModal() {
+    const modal = document.querySelector(".modal");
+    // état initial de la modale 
+    modal.innerHTML = initialModal;
+    genererProjetsModale(projets);
+
+    // Ré-initialisation de la hauteur de la fenêtre modale
+    modal.style.height = "731px";
+    
+    // Flèche de retour masquée
+    const arrowBack = document.querySelector(".fa-arrow-left-long");
+    arrowBack.style.display = "none"
+    
+    // Ré-initialisation du titre en "Galerie photo"
+    const h3 = document.querySelector("h3");
+    h3.textContent = "Galerie photo";
+    
+    // Disparition de la modale galerie
+    const modalGallery = document.querySelector(".modal-gallery");
+    modalGallery.style.display = "grid"
+
+    // Disparition du cadre de la nouvelle photo à ajouter
+    const modalPicture = document.querySelector(".modal-picture");
+    modalPicture.style.display = "none";
+
+    // Disparition du formulaire de la nouvelle photo à ajouter
+    const modalForm = document.querySelector(".modal-form");
+    modalForm.style.display = "none";
+
+    // Ré-initialisation du bouton "Ajouter une photo"
+    const validateBtn = document.querySelector(".btn-add-picture");
+    validateBtn.textContent = "Ajouter une photo";
+    validateBtn.style.margin = "38px auto 23px auto";
+    validateBtn.style.background = "#1D6154";
+    validateBtn.style.cursor = "pointer";
+
+    // Ré-apparition du bouton de suppression de la galerie 
+    const deleteGallery = document.querySelector(".btn-delete-gallery");
+    deleteGallery.style.display = "block";
+    
+    // Ajout, de nouveau, des écouteurs d'événements 
+    // Fermeture de la modale au clique sur la croix
+    const modalContainer = document.querySelector(".modal-container");
+    const closeModal = document.querySelector(".close-modal");
+    closeModal.addEventListener("click", () => {
+        modalContainer.style.display = "none";
+    })
+    
+    ajoutPhoto();
+}
+
+async function ajoutPhoto() {
+    const ajouterUnePhoto = document.querySelector(".btn-add-picture");
+
+    ajouterUnePhoto.addEventListener("click", function() {
+        // Changement de la hauteur de la fenêtre modale
+        const modal = document.querySelector(".modal");
+        modal.style.height = "670px";
+
+        // Flèche de retour visible
+        const arrowBack = document.querySelector(".fa-arrow-left-long");
+        arrowBack.style.display = "block"
+        // Au clique sur la flèche retour, la modale retrouve son état initial
+        arrowBack.addEventListener("click", (event) => {
+            event.stopPropagation();
+            restoreInitialModal();
+        })
+
+        // Changement du titre en "Ajout photo"
+        const h3 = document.querySelector("h3");
+        h3.textContent = "Ajout photo";
+
+        // Disparition de la modale galerie
+        const modalGallery = document.querySelector(".modal-gallery");
+        modalGallery.style.display = "none";
+
+        // Apparition du cadre de la nouvelle photo à ajouter
+        const modalPicture = document.querySelector(".modal-picture");
+        modalPicture.style.display = "flex";
+        cadreModale();
+
+        // Apparition du formulaire de la nouvelle photo à ajouter
+        const modalForm = document.querySelector(".modal-form");
+        modalForm.style.display = "flex";
+
+        // Changement du bouton "Ajouter une photo"
+        const validateBtn = document.querySelector(".btn-add-picture");
+        validateBtn.textContent = "Valider";
+        validateBtn.style.margin = "32px auto 23px auto";
+        validateBtn.style.background = "#a7a7a7";
+        validateBtn.style.cursor = "default";
+
+        // Disparition du bouton de suppression de la galerie 
+        const deleteGallery = document.querySelector(".btn-delete-gallery");
+        deleteGallery.style.display = "none";
+    });
+}
+
+async function cadreModale() {
+    const modalPicture = document.querySelector(".modal-picture");
+
+    const iconePictureElement = document.createElement("i");
+    iconePictureElement.classList.add("fa-regular", "fa-image");
+
+    const btnPictureElement = document.createElement("button");
+    btnPictureElement.innerHTML = "+ Ajouter photo";
+    btnPictureElement.classList.add("more-picture-btn");
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.id = "fileInput";
+    fileInput.style.display = "none"
+
+    btnPictureElement.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    const conditionPictureElement = document.createElement("p");
+    conditionPictureElement.innerHTML = "jpg, png : 4mo max";
+    conditionPictureElement.classList.add("condition-picture");
+
+    modalPicture.appendChild(iconePictureElement);
+    modalPicture.appendChild(btnPictureElement);
+    btnPictureElement.appendChild(fileInput);
+    modalPicture.appendChild(conditionPictureElement);
+}
+
+async function indexPage() {
+    await categories();
+    await works();
+    gestion();
+    ajoutPhoto();
+}
 
 // les fonctions sont exécutées lorsque la page est entièrement chargée
-document.addEventListener("DOMContentLoaded", function () {
-    gestion();
-});
+document.addEventListener("DOMContentLoaded", indexPage);

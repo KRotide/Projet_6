@@ -57,14 +57,15 @@ body {
 /*** fenêtre d'édition ***/
 .edit-mode {
 	width: 100vw;
-	margin-left: calc(-1 * ((100vw - 100%) / 2));
 	height: 59px;
 	background-color: black;
 	display: none;
 	justify-content: center;
 	align-items: center;
 	border: none;
-	position: relative;
+	position: absolute;
+	top: 0;
+	left: 0;
 	z-index: 1;
 }
 .edit-mode button {
@@ -76,6 +77,7 @@ body {
 	display: flex;
 	gap: 9px;
 	padding-right: 21px;
+	cursor: pointer;
 }
 .edit-mode p {
 	width: 216px;
@@ -93,19 +95,16 @@ body {
 /**** fenêtre modale ****/
 .modal-container {
 	display: none;
-	position: absolute;
-	top: 980px;
+	position: fixed;
+	top: 50%;
 	left: 50%;
 }
-.modal-container.active {
-	display: block;
-}
 .overlay {
+	width: 100vw;
 	position: fixed;
 	top: 0;
-	right: 0;
 	bottom: 0;
-	left: -20%;
+	left: 0;
 	background: rgba(0, 0, 0, 0.3);
 }
 
@@ -123,30 +122,127 @@ body {
 	right: -583.5px;
 	cursor: pointer;
 }
+.modal .fa-arrow-left-long {
+	position: relative;	
+	top: 16px;
+	right: -30px;
+	cursor: pointer;
+	display: none;
+}
 h3 {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 26px;
 	display: flex;
 	justify-content: center;
-	padding-top: 50px;
+	padding-top: 40px;
 }
 .modal-gallery {
 	padding: 46px 105px 46px 105px;
 	display: grid;
-	grid-template-columns: repeat(5, 76.61px);
-	grid-template-rows: 102.57px;
+	grid-template-columns: repeat(5, 1fr);
 	row-gap: 27.5px;
 	column-gap: 9px;
 }
+.modal-gallery figure {
+	position: relative;
+}
 .modal-image {
-	width: 100%;
-	height: 100%;
+	width: 76.61px;
+	height: 102.57px;
+}
+figure .fa-trash-can {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 9px;
+	color: white;
+	width: 17px;
+	height: 17px;
+	background-color: black;
+	border-radius: 2px;
+	position: absolute;
+	bottom: 94px;
+	left: 54.14px;
+	cursor: pointer;
+}
+figure .fa-arrows-up-down-left-right {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 11.12px;
+	color: white;
+	width: 17px;
+	height: 17px;
+	background-color: black;
+	border-radius: 2px;
+	position: absolute;
+	bottom: 94px;
+	left: 34.75px;
+	cursor: pointer;
+	visibility: hidden;
+}
+figure:hover .fa-arrows-up-down-left-right {
+	visibility: visible;
 }
 .modal-figcaption {
 	font-family: 'Work Sans';
 	font-weight: 400;
 	font-size: 12px;
+	cursor: pointer;
+}
+.modal-picture {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 420px;
+	height: 169px;
+	margin: 36px auto 9px auto;
+	background-color: #e8f1f7;
+	border-radius: 3px;
+}
+.modal-picture .fa-image {
+	font-size: 46px;
+	color: #b9c5cc;
+	margin-top: 28px;
+	margin-bottom: 21px;
+}
+.more-picture-btn {
+	font-family: 'Work Sans';
+	font-weight: 500;
+	font-size: 14px;
+	color: #306685;
+	width: 173px;
+	height: 36px;
+	border: none;
+	background: #cbd6dc;
+	border-radius: 50px;
+	cursor: pointer;
+}
+.condition-picture {
+	font-family: 'Work Sans';
+	font-weight: 400;
+	font-size: 10px;
+	color: #444444;
+	margin-top: 7px;
+	margin-bottom: 19px;
+}
+.modal-form {
+	text-align: left;
+	display: none;
+	flex-direction: column;
+	margin: 0 105px 47px 105px;
+}
+.modal-form input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	cursor: pointer;
+}
+.modal-form label {
+	margin: 21px 0 10px 0;
 }
 .separation {
 	background-color: #b3b3b3;
@@ -157,7 +253,7 @@ h3 {
 .btn-add-picture {
 	display: block;
 	margin: 38px auto 23px auto;
-	background-color: #1D6154;
+	background: #1D6154;
 	border-radius: 60px;
 	color: white;
 	font-family: 'Syne';
