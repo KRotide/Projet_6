@@ -228,18 +228,39 @@ figure:hover .fa-arrows-up-down-left-right {
 	margin-top: 7px;
 	margin-bottom: 19px;
 }
+.dropzone-container {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 420px;
+	height: 169px;
+	background-color: #e8f1f7;
+	border-radius: 3px;
+}
+.miniature-image {
+	max-width: 100%;
+	max-height: 100%;
+	display: block;
+	margin: auto;
+}
 .modal-form {
 	text-align: left;
 	display: none;
 	flex-direction: column;
 	margin: 0 105px 47px 105px;
 }
-.modal-form input {
+.modal-form input,
+.modal-form select {
 	height: 50px;
-	font-size: 1.2em;
 	border: none;
+	background-color: white;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	cursor: pointer;
+	color: #444444;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	padding-left: 16px;
 }
 .modal-form label {
 	margin: 21px 0 10px 0;

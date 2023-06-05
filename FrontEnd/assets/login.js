@@ -58,22 +58,24 @@ async function envoyerIdentifiants() {
 async function deconnexion() {
     const loginLink = document.querySelector(".login-link");
 
-    // Vérification si le token est déjà stocké dans le local storage
-    if (localStorage.getItem("token")) {
+    if (loginLink) {
+        // Vérification si le token est déjà stocké dans le local storage
+        if (localStorage.getItem("token")) {
 
-        // Changement du texte du lien "login" en "logout"
-        loginLink.textContent = "logout";
+            // Changement du texte du lien "login" en "logout"
+            loginLink.textContent = "logout";
 
-        // Déconnexion lors du clique sur "logout"
-        loginLink.addEventListener("click", function (event) {
-            event.preventDefault();
+            // Déconnexion lors du clique sur "logout"
+            loginLink.addEventListener("click", function (event) {
+                event.preventDefault();
 
-            // Suppression du token du local storage
-            localStorage.removeItem("token");
+                // Suppression du token du local storage
+                localStorage.removeItem("token");
 
-            // Redirection vers la page d'identification 
-            window.location.href = "login.html";
-        });
+                // Redirection vers la page d'identification 
+                window.location.href = "login.html";
+            });
+        }
     }
 }
 
