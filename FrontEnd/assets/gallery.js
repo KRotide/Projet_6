@@ -12,7 +12,7 @@ async function categories() {
         const categoriesData = await response.json();
 
         // Ajout manuel d'une nouvelle catégorie
-        const nouvelleCategorie = { id: "4", name: "Tous" };
+        const nouvelleCategorie = { id: "0", name: "Tous" };
         categoriesSet.add(nouvelleCategorie);
 
         // Ajout des catégories de l'API dans le Set
@@ -28,7 +28,7 @@ async function categories() {
     }
 };
 
-async function genererCategories(categories) {
+function genererCategories(categories) {
     // Récupération de l'élément du DOM qui accueillera les catégories
     const divFiltres = document.querySelector(".filters");
 
@@ -50,7 +50,7 @@ async function genererCategories(categories) {
             this.classList.add("filter-selected");
 
             // Au clique de la catégorie ajoutée manuellement
-            if (categorie.id === "4") {
+            if (categorie.id === "0") {
                 // Réinitialiser la galerie
                 const divGalerie = document.querySelector(".gallery");
                 divGalerie.innerHTML = "";
@@ -96,7 +96,7 @@ async function works() {
     }
 }
 
-async function genererProjets(projets) {
+function genererProjets(projets) {
     // Récupération de l'élément du DOM qui accueillera les projets
     const divGalerie = document.querySelector(".gallery");
 
@@ -122,7 +122,7 @@ async function genererProjets(projets) {
 }
 
 // Création de la fonction de gestion 
-async function gestion() {
+function gestion() {
     const editButtons = document.querySelectorAll(".edit");
     const editMode = document.querySelector(".edit-mode");
     const filters = document.querySelector(".filters");
@@ -177,7 +177,7 @@ async function gestion() {
     }
 }
 
-async function genererProjetsModale(projets) {
+function genererProjetsModale(projets) {
     // Récupération de l'élément du DOM qui accueillera les projets de la modale
     const divGalerieModale = document.querySelector(".modal-gallery");
     divGalerieModale.innerHTML = "";
@@ -196,6 +196,26 @@ async function genererProjetsModale(projets) {
 
         const iconeElement = document.createElement("i");
         iconeElement.classList.add("fa-regular", "fa-trash-can");
+        // Appel de la fonction deleteProject lorsque l'icône de poubelle est cliquée
+        const trashCans = document.querySelectorAll(".fa-trash-can");
+        trashCans.forEach(trashCan => {
+            trashCan.addEventListener("click", handleClick);
+        });
+        
+        async function handleClick(event) {
+            event.stopPropagation();
+        
+            const trashCan = event.target;
+            const confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce projet ?");
+        
+            if (confirmation) {
+                try {
+                    await deleteProject(event);
+                } catch (error) {
+                    console.error("Erreur lors de la suppression du projet:", error);
+                }
+            }
+        }
 
         const hoverIconeElement = document.createElement("i");
         hoverIconeElement.classList.add("fa-solid", "fa-arrows-up-down-left-right");
@@ -213,7 +233,7 @@ async function genererProjetsModale(projets) {
     }
 }
 
-async function restoreInitialModal() {
+function restoreInitialModal() {
     const modal = document.querySelector(".modal");
     // état initial de la modale 
     modal.innerHTML = initialModal;
@@ -245,11 +265,10 @@ async function restoreInitialModal() {
     document.querySelector("#title").value = "";
 
     // Ré-initialisation du bouton "Ajouter une photo"
-    const validateBtn = document.querySelector(".btn-add-picture");
-    validateBtn.textContent = "Ajouter une photo";
-    validateBtn.style.margin = "38px auto 23px auto";
-    validateBtn.style.background = "#1D6154";
-    validateBtn.style.cursor = "pointer";
+    const addPictureBtn = document.querySelector(".btn-add-picture");
+    const validateBtn = document.querySelector(".btn-validate");
+    addPictureBtn.style.display = "block";
+    validateBtn.style.display = "none";
 
     // Ré-apparition du bouton de suppression de la galerie 
     const deleteGallery = document.querySelector(".btn-delete-gallery");
@@ -267,9 +286,9 @@ async function restoreInitialModal() {
 }
 
 async function ajoutPhoto() {
-    const ajouterUnePhoto = document.querySelector(".btn-add-picture");
+    const addPictureBtn = document.querySelector(".btn-add-picture");
 
-    ajouterUnePhoto.addEventListener("click", function() {
+    addPictureBtn.addEventListener("click", async function() {
         // Changement de la hauteur de la fenêtre modale
         const modal = document.querySelector(".modal");
         modal.style.height = "670px";
@@ -299,25 +318,20 @@ async function ajoutPhoto() {
         // Apparition du formulaire de la nouvelle photo à ajouter
         const modalForm = document.querySelector(".modal-form");
         modalForm.style.display = "flex";
-        document.querySelector("#title").value = "";
         optionsFormulaire(categoriesSet);
 
         // Changement du bouton "Ajouter une photo"
-        const validateBtn = document.querySelector(".btn-add-picture");
-        validateBtn.textContent = "Valider";
-        validateBtn.style.margin = "32px auto 23px auto";
-        validateBtn.style.background = "#a7a7a7";
-        validateBtn.style.cursor = "default";
-        // Si les conditions sont réunies => bouton fonctionnel 
-        document.querySelector("#fileInput").addEventListener("change", () => {
-            uploader();
-        })
-        document.querySelector("#title").addEventListener("input", () => {
-            uploader();
-        })
-        document.querySelector("#categoriesOption").addEventListener("change", () => {
-            uploader();
-        })
+        const addPictureBtn = document.querySelector(".btn-add-picture");
+        const validateBtn = document.querySelector(".btn-validate");
+        addPictureBtn.style.display = "none";
+        validateBtn.style.display = "block";
+        
+        // Si les conditions sont réunies => changement d'aspect du bouton d'envoi "Valider"
+        document.querySelector(".miniature-image").addEventListener("change", updateValidateBtn);
+        document.querySelector("#title").addEventListener("input", updateValidateBtn);
+        document.querySelector("#categoriesOption").addEventListener("change", updateValidateBtn);
+        // Au clique sur "Valider" appel de ma fonction uploader 
+        validateBtn.addEventListener("click", uploader);
 
         // Disparition du bouton de suppression de la galerie 
         const deleteGallery = document.querySelector(".btn-delete-gallery");
@@ -325,7 +339,7 @@ async function ajoutPhoto() {
     });
 }
 
-async function cadreModale() {
+function cadreModale() {
     const modalPicture = document.querySelector(".modal-picture");
     modalPicture.innerHTML = "";
 
@@ -336,20 +350,20 @@ async function cadreModale() {
     btnPictureElement.innerHTML = "+ Ajouter photo";
     btnPictureElement.classList.add("more-picture-btn");
 
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/jpeg, image/png";
-    fileInput.id = "fileInput";
-    fileInput.style.display = "none"
-
-    btnPictureElement.addEventListener("click", () => {
-        fileInput.click();
-    });
-
     const dropzoneContainer = document.createElement("div");
     dropzoneContainer.classList.add("dropzone-container");
     const miniatureImage = document.createElement("img");
     miniatureImage.classList.add("miniature-image");
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/jpeg, image/png";
+    fileInput.id = "fileInput";
+    fileInput.style.display = "none";
+
+    btnPictureElement.addEventListener("click", () => {
+        fileInput.click();
+    });
 
     fileInput.addEventListener("change", (event) => {
         const selectedFile = event.target.files[0];
@@ -378,13 +392,13 @@ async function cadreModale() {
 
     modalPicture.appendChild(iconePictureElement);
     modalPicture.appendChild(btnPictureElement);
-    btnPictureElement.appendChild(fileInput);
     modalPicture.appendChild(conditionPictureElement);
     modalPicture.appendChild(dropzoneContainer);
+    dropzoneContainer.appendChild(fileInput);
     dropzoneContainer.appendChild(miniatureImage);
 }
 
-async function optionsFormulaire(categoriesSet) {
+function optionsFormulaire(categoriesSet) {
     const modalForm = document.querySelector(".modal-form");
 
     let select = document.getElementById("categoriesOption");
@@ -393,38 +407,132 @@ async function optionsFormulaire(categoriesSet) {
     if (!select) {
         select = document.createElement("select");
         select.id = "categoriesOption";
+        select.name = "category";
         modalForm.appendChild(select);
 
         const inputOption = document.createElement("option");
         inputOption.value = "";
         select.appendChild(inputOption);
-    } else {
-        // Suppression des options existantes à partir de l'index 1
-        for (let i = select.options.length - 1; i >= 1; i--) {
-            select.remove(i);
-        }
-    }
 
-    for (const categorie of categoriesSet) {
-        const optionElement = document.createElement("option");
-        optionElement.value = categorie.name;
-        optionElement.textContent = categorie.name;
-        select.appendChild(optionElement);
+        for (const categorie of categoriesSet) {
+            const optionElement = document.createElement("option");
+            optionElement.value = categorie.id;
+            optionElement.textContent = categorie.name;
+            select.appendChild(optionElement);
+        }
     }
 }
 
-async function uploader() {
+function updateValidateBtn() {
     const miniatureImage= document.querySelector(".miniature-image");
     const titleInput = document.querySelector("#title").value;
     const categoryInput = document.querySelector("#categoriesOption").value;
-    const validateBtn = document.querySelector(".btn-add-picture");
+    const validateBtn = document.querySelector(".btn-validate");
 
     if (miniatureImage.src !== "" && titleInput !== "" && categoryInput !== "") {
+        // Changement d'aspect du bouton Valider 
         validateBtn.style.background = "#1d6154";
         validateBtn.style.cursor = "pointer";
     } else {
         validateBtn.style.background = "#a7a7a7";
         validateBtn.style.cursor = "default";
+    }
+}
+
+async function uploader(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const fileInput = document.querySelector("#fileInput").files[0];
+    const titleInput = document.querySelector("#title").value;
+    const categoryInput = document.querySelector("#categoriesOption").value;
+    console.log(fileInput);
+
+    if (!fileInput) {
+        console.error("Aucun fichier sélectionné");
+        return;
+    }
+
+    // Récupération du token dans le local storage
+    let monToken = localStorage.getItem("token");
+    console.log(monToken);
+
+    const formData = new FormData();
+    formData.append("image", fileInput);
+    formData.append("title", titleInput);
+    formData.append("category", categoryInput);
+
+    try {
+        // Requête Post à l'API
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: { 
+                'Accept': '*/*',
+                'Authorization': `Bearer ${monToken}`,
+            },
+            body: formData
+        })
+        console.log(formData);
+
+        // Vérification de la réponse 
+        if (response.status === 400) {
+            throw new Error("mauvaise requête.");
+        }
+        if (response.status === 401) {
+            throw new Error("Non autorisé.");
+        } 
+        if (response.status === 500) {
+            throw new Error("Comportement inattendu.");
+        }
+        if (response.status === 200 && fileInput !== "" && titleInput !== "" && categoryInput !== "") {
+            // Changement d'aspect du bouton Valider et envoi du projet
+            updateValidateBtn();
+            console.log(updateValidateBtn);
+            send(formData);
+            console.log(send(formData));
+            console.log("Projet envoyé avec succès !");
+        }
+        console.log(response.status)
+    } catch (error) {
+        console.error("Erreur lors de la requête d'envoi")
+    }
+}
+
+async function deleteProject(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const trashCan = event.target;
+    // projet dans lequel se trouve l'icône de poubelle 
+    const figure = trashCan.closest("figure");
+    // Obtention de l'ID du projet dans lequel se trouve l'icône de poubelle
+    const projectID = figure.getAttribute("data-id");
+    // Récupération du token dans le local storage
+    let monToken = localStorage.getItem("token");
+
+    try {
+        // Requête DELETE à l'API en utilisant l'ID du projet
+        const response = await fetch(`http://localhost:5678/api/works/${projectID}`, {
+            method: "DELETE",
+            headers: {
+                'Accept': '*/*',
+                'Authorization': `Bearer ${monToken}`,
+            },
+        })
+
+        // Vérification de la réponse 
+        if (response.status === 401) {
+            throw new Error("Non autorisé.");
+        } 
+        if (response.status === 500) {
+            throw new Error("Comportement inattendu.");
+        }
+        if (response.status === 200) {
+            // Supression du projet du DOM
+            figure.remove();
+        }
+    } catch (error) {
+        console.error("Erreur lors de la requête de suppression:", error);
     }
 }
 

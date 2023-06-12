@@ -285,6 +285,20 @@ figure:hover .fa-arrows-up-down-left-right {
 	height: 36px;
 	cursor: pointer;
 }
+.btn-validate {
+	display: none;
+	margin: 32px auto 55px auto;
+	background: #a7a7a7;
+	border-radius: 60px;
+	color: white;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 14px;
+	border: none;
+	width: 237px;
+	height: 36px;
+	cursor: default;
+}
 .btn-delete-gallery {
 	border: none;
 	display: block;
@@ -416,7 +430,7 @@ li:hover {
 	display: flex;
 	align-items: center;
 }
-ul[data-id="4"] {
+ul[data-id="0"] {
 	padding-left: 28px;
 	padding-right: 30px;
 }

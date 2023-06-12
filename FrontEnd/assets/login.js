@@ -25,8 +25,8 @@ async function envoyerIdentifiants() {
                 });
         
                 // Vérification de la réponse 
-                if (response.status !== 200) {
-                    throw new Error("échec de la requête d'authentification.");
+                if (response.status === 404) {
+                    throw new Error("Erreur dans l’identifiant ou le mot de passe.");
                 }
 
                 // Si la réponse est réussie, extraction des données en JSON
@@ -43,8 +43,8 @@ async function envoyerIdentifiants() {
                     // Changement du texte du lien une fois connecté
                     deconnexion();
                 } else {
-                    // Message en cas d'erreur d'authentification 
-                    console.log("échec de l'authentification");
+                    // Si pas de token présent : message en cas d'erreur d'authentification 
+                    alert("échec de l'authentification");
                 }
             } catch (error) {
                 // Message en cas d'arreurs de requête ou de connexion 
@@ -55,7 +55,7 @@ async function envoyerIdentifiants() {
 }
 
 // Création de la fonction de déconnexion 
-async function deconnexion() {
+function deconnexion() {
     const loginLink = document.querySelector(".login-link");
 
     if (loginLink) {
