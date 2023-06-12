@@ -197,25 +197,7 @@ function genererProjetsModale(projets) {
         const iconeElement = document.createElement("i");
         iconeElement.classList.add("fa-regular", "fa-trash-can");
         // Appel de la fonction deleteProject lorsque l'icône de poubelle est cliquée
-        const trashCans = document.querySelectorAll(".fa-trash-can");
-        trashCans.forEach(trashCan => {
-            trashCan.addEventListener("click", handleClick);
-        });
-        
-        async function handleClick(event) {
-            event.stopPropagation();
-        
-            const trashCan = event.target;
-            const confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce projet ?");
-        
-            if (confirmation) {
-                try {
-                    await deleteProject(event);
-                } catch (error) {
-                    console.error("Erreur lors de la suppression du projet:", error);
-                }
-            }
-        }
+        iconeElement.addEventListener("click", handleClick);
 
         const hoverIconeElement = document.createElement("i");
         hoverIconeElement.classList.add("fa-solid", "fa-arrows-up-down-left-right");
@@ -230,6 +212,20 @@ function genererProjetsModale(projets) {
         projetElement.appendChild(iconeElement);
         projetElement.appendChild(hoverIconeElement);
         projetElement.appendChild(titleElement);
+    }
+    async function handleClick(event) {
+        event.stopPropagation();
+    
+        const trashCan = event.target;
+        const confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce projet ?");
+    
+        if (confirmation) {
+            try {
+                await deleteProject(event);
+            } catch (error) {
+                console.error("Erreur lors de la suppression du projet:", error);
+            }
+        }
     }
 }
 
@@ -446,7 +442,6 @@ async function uploader(event) {
     const fileInput = document.querySelector("#fileInput").files[0];
     const titleInput = document.querySelector("#title").value;
     const categoryInput = document.querySelector("#categoriesOption").value;
-    console.log(fileInput);
 
     if (!fileInput) {
         console.error("Aucun fichier sélectionné");
@@ -455,7 +450,6 @@ async function uploader(event) {
 
     // Récupération du token dans le local storage
     let monToken = localStorage.getItem("token");
-    console.log(monToken);
 
     const formData = new FormData();
     formData.append("image", fileInput);
@@ -472,7 +466,6 @@ async function uploader(event) {
             },
             body: formData
         })
-        console.log(formData);
 
         // Vérification de la réponse 
         if (response.status === 400) {
@@ -487,12 +480,8 @@ async function uploader(event) {
         if (response.status === 200 && fileInput !== "" && titleInput !== "" && categoryInput !== "") {
             // Changement d'aspect du bouton Valider et envoi du projet
             updateValidateBtn();
-            console.log(updateValidateBtn);
             send(formData);
-            console.log(send(formData));
-            console.log("Projet envoyé avec succès !");
         }
-        console.log(response.status)
     } catch (error) {
         console.error("Erreur lors de la requête d'envoi")
     }
