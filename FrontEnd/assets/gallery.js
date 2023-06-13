@@ -439,9 +439,9 @@ async function uploader(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    const fileInput = document.querySelector("#fileInput").files[0];
-    const titleInput = document.querySelector("#title").value;
-    const categoryInput = document.querySelector("#categoriesOption").value;
+    let fileInput = document.querySelector("#fileInput").files[0];
+    let titleInput = document.querySelector("#title").value;
+    let categoryInput = document.querySelector("#categoriesOption").value;
 
     if (!fileInput) {
         console.error("Aucun fichier sélectionné");
@@ -469,7 +469,8 @@ async function uploader(event) {
 
         // Vérification de la réponse 
         if (response.status === 400) {
-            throw new Error("mauvaise requête.");
+            // Message d’erreur si le formulaire n’est pas correctement rempli
+            alert("Erreur de validation du formulaire. Veuillez remplir entièrement le formulaire.");
         }
         if (response.status === 401) {
             throw new Error("Non autorisé.");
@@ -477,10 +478,20 @@ async function uploader(event) {
         if (response.status === 500) {
             throw new Error("Comportement inattendu.");
         }
-        if (response.status === 200 && fileInput !== "" && titleInput !== "" && categoryInput !== "") {
+        if (response.status === 201 && fileInput !== "" && titleInput !== "" && categoryInput !== "") {
             // Changement d'aspect du bouton Valider et envoi du projet
             updateValidateBtn();
-            send(formData);
+            // Réponse de l'API si le formulaire est correctement envoyé 
+            const responseData = await response.json();
+            console.log("Réponse de l'API :", responseData);
+            // Actualisation dynamique du DOM 
+            const Galerie = document.querySelector(".gallery");
+            Galerie.innerHTML = "";
+            await works();
+            // fermeture de la modale 
+            document.querySelector(".modal-container").style.display = "none";
+            // En cas de ré-ouverture de la modale: réinitialisation du formulaire 
+            restoreInitialModal();
         }
     } catch (error) {
         console.error("Erreur lors de la requête d'envoi")
@@ -508,7 +519,6 @@ async function deleteProject(event) {
                 'Authorization': `Bearer ${monToken}`,
             },
         })
-
         // Vérification de la réponse 
         if (response.status === 401) {
             throw new Error("Non autorisé.");
@@ -516,9 +526,13 @@ async function deleteProject(event) {
         if (response.status === 500) {
             throw new Error("Comportement inattendu.");
         }
-        if (response.status === 200) {
-            // Supression du projet du DOM
+        if (response.status === 200 || response.status === 204) {
+            // Supression du projet de la galerie modale 
             figure.remove();
+            // Supression du projet de la galerie
+            const Galerie = document.querySelector(".gallery");
+            Galerie.innerHTML = "";
+            await works();
         }
     } catch (error) {
         console.error("Erreur lors de la requête de suppression:", error);

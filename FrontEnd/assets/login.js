@@ -26,7 +26,7 @@ async function envoyerIdentifiants() {
         
                 // Vérification de la réponse 
                 if (response.status === 404) {
-                    throw new Error("Erreur dans l’identifiant ou le mot de passe.");
+                    alert("Erreur dans l’identifiant ou le mot de passe.");
                 }
 
                 // Si la réponse est réussie, extraction des données en JSON
@@ -42,9 +42,6 @@ async function envoyerIdentifiants() {
 
                     // Changement du texte du lien une fois connecté
                     deconnexion();
-                } else {
-                    // Si pas de token présent : message en cas d'erreur d'authentification 
-                    alert("échec de l'authentification");
                 }
             } catch (error) {
                 // Message en cas d'arreurs de requête ou de connexion 
