@@ -23,7 +23,7 @@ async function categories() {
         genererCategories(categoriesSet);
 
         return categoriesSet;
-    }catch(err){
+    } catch (err) {
         throw new Error("Something went wrong");
     }
 };
@@ -42,7 +42,7 @@ function genererCategories(categories) {
         nomElement.innerHTML = categorie.name;
 
         // Changement d'aspect des filtres lors du clique 
-        categorieElement.addEventListener("click", function() {
+        categorieElement.addEventListener("click", function () {
             const itemSelected = divFiltres.querySelector("ul.filter-selected");
             if (itemSelected) {
                 itemSelected.classList.remove("filter-selected");
@@ -65,12 +65,12 @@ function genererCategories(categories) {
                     return categoryName === projetName;
                 });
 
-            // Réinitialiser la galerie
-            const divGalerie = document.querySelector(".gallery");
-            divGalerie.innerHTML = "";
+                // Réinitialiser la galerie
+                const divGalerie = document.querySelector(".gallery");
+                divGalerie.innerHTML = "";
 
-            // Générer les projets filtrés
-            genererProjets(projetsFiltres);
+                // Générer les projets filtrés
+                genererProjets(projetsFiltres);
             }
         });
 
@@ -91,7 +91,7 @@ async function works() {
         genererProjets(projets);
 
         return projets;
-    }catch (err){
+    } catch (err) {
         throw new Error("Something went wrong");
     }
 }
@@ -102,7 +102,7 @@ function genererProjets(projets) {
 
     for (let i = 0; i < projets.length; i++) {
         const projet = projets[i];
-        
+
         // Création d’une balise dédiée à un projet
         const projetElement = document.createElement("figure");
         projetElement.dataset.id = projet.id;
@@ -147,7 +147,7 @@ function gestion() {
         header.style.margin = "97px 0";
 
         // Ouverture de la fenêtre modale 
-        openModal.forEach((element) => 
+        openModal.forEach((element) =>
             element.addEventListener("click", () => {
                 modalContainer.style.display = "block";
                 fenêtreModale();
@@ -166,7 +166,7 @@ function gestion() {
                     modalContainer.style.display = "none";
                     restoreInitialModal();
                 }
-            });   
+            });
 
             if (modalContainer.style.display = "block") {
                 // Stockage de l'état initial de la modale 
@@ -184,7 +184,7 @@ function genererProjetsModale(projets) {
 
     for (let i = 0; i < projets.length; i++) {
         const projet = projets[i];
-        
+
         // Création d’une balise dédiée à un projet
         const projetElement = document.createElement("figure");
         projetElement.dataset.id = projet.id;
@@ -215,10 +215,10 @@ function genererProjetsModale(projets) {
     }
     async function handleClick(event) {
         event.stopPropagation();
-    
+
         const trashCan = event.target;
         const confirmation = confirm("Êtes-vous sûr de vouloir supprimer ce projet ?");
-    
+
         if (confirmation) {
             try {
                 await deleteProject(event);
@@ -237,15 +237,15 @@ function restoreInitialModal() {
 
     // Ré-initialisation de la hauteur de la fenêtre modale
     modal.style.height = "731px";
-    
+
     // Flèche de retour masquée
     const arrowBack = document.querySelector(".fa-arrow-left-long");
     arrowBack.style.display = "none"
-    
+
     // Ré-initialisation du titre en "Galerie photo"
     const h3 = document.querySelector("h3");
     h3.textContent = "Galerie photo";
-    
+
     // Disparition de la modale galerie
     const modalGallery = document.querySelector(".modal-gallery");
     modalGallery.style.display = "grid"
@@ -269,7 +269,7 @@ function restoreInitialModal() {
     // Ré-apparition du bouton de suppression de la galerie 
     const deleteGallery = document.querySelector(".btn-delete-gallery");
     deleteGallery.style.display = "block";
-    
+
     // Ajout, de nouveau, des écouteurs d'événements 
     // Fermeture de la modale au clique sur la croix
     const modalContainer = document.querySelector(".modal-container");
@@ -277,14 +277,14 @@ function restoreInitialModal() {
     closeModal.addEventListener("click", () => {
         modalContainer.style.display = "none";
     })
-    
+
     ajoutPhoto();
 }
 
 async function ajoutPhoto() {
     const addPictureBtn = document.querySelector(".btn-add-picture");
 
-    addPictureBtn.addEventListener("click", async function() {
+    addPictureBtn.addEventListener("click", async function () {
         // Changement de la hauteur de la fenêtre modale
         const modal = document.querySelector(".modal");
         modal.style.height = "670px";
@@ -321,7 +321,7 @@ async function ajoutPhoto() {
         const validateBtn = document.querySelector(".btn-validate");
         addPictureBtn.style.display = "none";
         validateBtn.style.display = "block";
-        
+
         // Si les conditions sont réunies => changement d'aspect du bouton d'envoi "Valider"
         document.querySelector(".miniature-image").addEventListener("change", updateValidateBtn);
         document.querySelector("#title").addEventListener("input", updateValidateBtn);
@@ -411,16 +411,18 @@ function optionsFormulaire(categoriesSet) {
         select.appendChild(inputOption);
 
         for (const categorie of categoriesSet) {
-            const optionElement = document.createElement("option");
-            optionElement.value = categorie.id;
-            optionElement.textContent = categorie.name;
-            select.appendChild(optionElement);
+            if (categorie.id != 0) {
+                const optionElement = document.createElement("option");
+                optionElement.value = categorie.id;
+                optionElement.textContent = categorie.name;
+                select.appendChild(optionElement);
+            }
         }
     }
 }
 
 function updateValidateBtn() {
-    const miniatureImage= document.querySelector(".miniature-image");
+    const miniatureImage = document.querySelector(".miniature-image");
     const titleInput = document.querySelector("#title").value;
     const categoryInput = document.querySelector("#categoriesOption").value;
     const validateBtn = document.querySelector(".btn-validate");
@@ -460,7 +462,7 @@ async function uploader(event) {
         // Requête Post à l'API
         const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
-            headers: { 
+            headers: {
                 'Accept': '*/*',
                 'Authorization': `Bearer ${monToken}`,
             },
@@ -474,7 +476,7 @@ async function uploader(event) {
         }
         if (response.status === 401) {
             throw new Error("Non autorisé.");
-        } 
+        }
         if (response.status === 500) {
             throw new Error("Comportement inattendu.");
         }
@@ -522,7 +524,7 @@ async function deleteProject(event) {
         // Vérification de la réponse 
         if (response.status === 401) {
             throw new Error("Non autorisé.");
-        } 
+        }
         if (response.status === 500) {
             throw new Error("Comportement inattendu.");
         }
